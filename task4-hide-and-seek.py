@@ -32,7 +32,8 @@ JPEG_MARKER = b"\xFF\xFE"
 # Instead of hardcoding the message in the code
 MESSAGE = input("Enter a message to be encoded into the image: ")
 if MESSAGE == "":
-    MESSAGE = "This is a secret message hidden inside the image using AES encryption and steganography."
+    MESSAGE = "This is a secret message hidden inside the image " \
+    "using AES encryption and steganography."
     print("No message given, using the default message:\n", MESSAGE)
 
 # ~~~~~~~~ ENCRYPTING THE MESSAGE WITH AES ~~~~~~~~ 
@@ -63,6 +64,7 @@ comment_segement = JPEG_MARKER + segment_length.to_bytes(2, "big") + payload
 # Original image remains unchanged, but the comment segement is ignored by image viewers
 stego_bytes = marker + comment_segement + image_bytes[2:]
 
+# Saving the new image with hidden message
 with open(STEGO_IMAGE, "wb") as f:
     f.write(stego_bytes)
 
@@ -86,14 +88,17 @@ recovered_ciphertext = hidden_payload[16:]
 with open(AES_KEY, 'rb') as f:
     recovered_key = f.read()
 
+# Decrypting the hidden message using the recovered AES key and IV
 recovered_message = AES.new(
     recovered_key, 
     AES.MODE_CFB, iv=recovered_iv
 ).decrypt(recovered_ciphertext)
 
+# Saving the revealed message to a text file
 with open(REVEALED_MESSAGE, "w") as f:
     f.write(recovered_message.decode())
 
+# Displaying the results to the user
 print(SEPARATOR)
 print("ORIGINAL MESSAGE:\n", MESSAGE)
 print(SEPARATOR)

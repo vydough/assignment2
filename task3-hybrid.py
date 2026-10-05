@@ -4,9 +4,11 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES, PKCS1_OAEP 
 from Crypto.Random import get_random_bytes
 
+# Reference: Code borrows from: 
+
 SEPARATOR = "-" * 60
 
-# Base Directory for portable file paths 
+# Establish a base path to make paths work on all OS
 # Based on L4, L5 code archive examples
 BASE = os.path.dirname(os.path.abspath(__file__))
 
@@ -54,6 +56,10 @@ def generate_rsa_keys():
     print("\nRSA PUBLIC KEY:\n")
     print(rsa_key.publickey().export_key())
 
+ # ~~~~~~~~~~ AES SYMMETRIC ENCRYPTION ~~~~~~~~~~ 
+# AES-CFB Encryption Mode chosen
+# Code is based on Lectorial 5 code arhive
+# Does not produce authentication tag for tamper detection
 def sender_encrypt():
     # Load key files in binary mode to read the raw bytes for AES and RSA encryption
     with open(PUBLIC_KEY_FILE, "rb") as f:
@@ -62,15 +68,10 @@ def sender_encrypt():
     with open(INPUT_FILE, "rb") as f:
         plaintext = f.read()
 
-    # ~~~~~~~~~~ AES SYMMETRIC ENCRYPTION ~~~~~~~~~~ 
     # Creates random one time use 128 bit key (session key)
     aes_key = get_random_bytes(16) 
 
-    # AES-CFB Encryption Mode chosen
-    # Code is based on Lectorial 5 code arhive
-    # Does not produce authentication tag for tamper detection
-
-    # Encrypt plaintext using AEs in CFB mode
+    # Encrypt plaintext using AES in CFB mode
     # CFB does not require padding, uses randomly generated IV: cipher_aes.iv
     cipher_aes = AES.new(aes_key, AES.MODE_CFB)
     ciphertext = cipher_aes.encrypt(plaintext)
@@ -81,7 +82,7 @@ def sender_encrypt():
         f.write(ciphertext)
 
     # RSA-OAEP ENCRYPTION (asymmetric encryption)
-    # Encrypt the AES session key with RSA-OAEP
+    # Encrypt the AES session key with RSA-OAEP process
     # OAEP adds randomised padding to the raw RSA (not textbook RSA)
     cipher_rsa = PKCS1_OAEP.new(public_key)
     encrypted_aes_key = cipher_rsa.encrypt(aes_key)
