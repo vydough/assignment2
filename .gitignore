@@ -2,6 +2,7 @@
 venv/
 .DS_Store
 .env
-*.pem, *.key
+*.pem
+*.key
 *.bmp
 *.bin
