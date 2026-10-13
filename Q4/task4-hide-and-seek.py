@@ -2,6 +2,14 @@ import os
 from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 
+# I used the following code arhive references from the course material: 
+# --------------------------------------------------------------------------
+# i used lectorial 5's aes_cfb_file.py and aes_ofb_string.py as a refernece 
+# for the AES-CFB encryption of the hidden message (random session key, IV, no padding)
+
+# The JPEG steganography technique inside JPEG comment segment
+# was not based on any given code and was 
+
 # Establish a base path to make paths work on every OS
 BASE = os.path.dirname(os.path.abspath(__file__))
 

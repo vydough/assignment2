@@ -4,7 +4,18 @@ from Crypto.PublicKey import RSA
 from Crypto.Cipher import AES, PKCS1_OAEP 
 from Crypto.Random import get_random_bytes
 
-# Reference: Code borrows from: 
+# I used the following code references from the course material: 
+# ---------------------------------------------------------------------------
+# I used Lectorial 8's hybrid_crypto.py as reference for the overall hybrid 
+# encryption design: generate random one-time AES session key, 
+# encrypting the data with AES-CFB, then encrypting only that session key with RSA-OAEP.
+
+# I used Lectorial 5's rsa_pycryptodome_file.py as reference for the RSA
+# key generation, export and PKCS1_OAERP encryption/decryption using pycryptodome library
+
+# I used aes_ofb_string.py as reference for the pycrptodome-specific AES.new(),
+# as aes_cfb_file.py used the separate crpyotgraphy library instead
+
 
 SEPARATOR = "-" * 60
 
